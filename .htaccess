@@ -1,0 +1,11 @@
+<IfModule mod_rewrite.c>
+    RewriteEngine On
+
+    # Handle assets directly
+    RewriteRule ^(css|js|images|fonts|build)/(.*)$ public/$1/$2 [L]
+
+    # Handle everything else via root index.php
+    RewriteCond %{REQUEST_FILENAME} !-d
+    RewriteCond %{REQUEST_FILENAME} !-f
+    RewriteRule ^ index.php [L]
+</IfModule>

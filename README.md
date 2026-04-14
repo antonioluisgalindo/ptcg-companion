@@ -1,66 +1,77 @@
-<p align="center"><a href="https://laravel.com" target="_blank"><img src="https://raw.githubusercontent.com/laravel/art/master/logo-lockup/5%20SVG/2%20CMYK/1%20Full%20Color/laravel-logolockup-cmyk-red.svg" width="400" alt="Laravel Logo"></a></p>
+# PTCG Companion 🏆
 
-<p align="center">
-<a href="https://github.com/laravel/framework/actions"><img src="https://github.com/laravel/framework/workflows/tests/badge.svg" alt="Build Status"></a>
-<a href="https://packagist.org/packages/laravel/framework"><img src="https://img.shields.io/packagist/dt/laravel/framework" alt="Total Downloads"></a>
-<a href="https://packagist.org/packages/laravel/framework"><img src="https://img.shields.io/packagist/v/laravel/framework" alt="Latest Stable Version"></a>
-<a href="https://packagist.org/packages/laravel/framework"><img src="https://img.shields.io/packagist/l/laravel/framework" alt="License"></a>
-</p>
+**PTCG Companion** es una plataforma profesional diseñada para optimizar la organización y gestión de torneos del **Juego de Cartas Coleccionables Pokémon (TCG)**. Desde la inscripción de jugadores hasta la exportación de resultados, centraliza todas las herramientas necesarias para organizadores y jugadores.
 
-## About Laravel
+## ✨ Características Principales
 
-Laravel is a web application framework with expressive, elegant syntax. We believe development must be an enjoyable and creative experience to be truly fulfilling. Laravel takes the pain out of development by easing common tasks used in many web projects, such as:
+### 📋 Gestión de Torneos
+- **Ciclo de Vida Completo:** Control total sobre los estados del torneo (Borrador, Inscripciones, En Curso, Finalizado, Cancelado).
+- **Formatos Oficiales:** Soporte para formatos Standard, Expanded y Unlimited.
+- **Top Cut:** Configuración de eliminatorias (Top 4, 8, 16, 32) tras las rondas suizas.
 
-- [Simple, fast routing engine](https://laravel.com/docs/routing).
-- [Powerful dependency injection container](https://laravel.com/docs/container).
-- Multiple back-ends for [session](https://laravel.com/docs/session) and [cache](https://laravel.com/docs/cache) storage.
-- Expressive, intuitive [database ORM](https://laravel.com/docs/eloquent).
-- Database agnostic [schema migrations](https://laravel.com/docs/migrations).
-- [Robust background job processing](https://laravel.com/docs/queues).
-- [Real-time event broadcasting](https://laravel.com/docs/broadcasting).
+### 📍 Localización Inteligente
+- **Geoposicionamiento:** Clasificación de torneos por **Provincia** y **Localidad**.
+- **Filtros Avanzados:** Buscador con selectores enlazados (la provincia filtra dinámicamente las localidades mediante AJAX).
 
-Laravel is accessible, powerful, and provides tools required for large, robust applications.
+### 👥 Gestión de Participantes (UX Premium)
+- **Modal de Inscritos Asíncrono:** Adminitración de jugadores sin recargar la página.
+- **Estadísticas en Tiempo Real:** Conteo automático de jugadores por categorías de edad (Master, Senior, Junior).
+- **Buscador Integrado:** Filtrado instantáneo de inscritos por nombre o Player ID.
 
-## Learning Laravel
+### 📱 Inscripción Ágil
+- **Códigos QR:** Los organizadores pueden mostrar un código QR dinámico para que los jugadores se unan al instante.
+- **Validación Automática:** Comprobación obligatoria de Categoría (fecha de nacimiento) y Player ID oficial para inscripciones válidas.
 
-Laravel has the most extensive and thorough [documentation](https://laravel.com/docs) and video tutorial library of all modern web application frameworks, making it a breeze to get started with the framework.
+### ⚙️ Integración con TOM
+- **Importación Flexible:** Permite cargar bases de datos de jugadores y emparejamientos de rondas directamente desde el software **TOM (Tournament Official Manager)** mediante copiado/pegado de tablas o archivos CSV.
 
-You may also try the [Laravel Bootcamp](https://bootcamp.laravel.com), where you will be guided through building a modern Laravel application from scratch.
+### ⚔️ Sistema de Emparejamientos
+- **Swiss System:** Emparejamientos automáticos basados en el rendimiento de los jugadores.
+- **Gestión de Resultados:** Interfaz intuitiva para que los jugadores o jueces reporten los marcadores de las partidas.
 
-If you don't feel like reading, [Laracasts](https://laracasts.com) can help. Laracasts contains thousands of video tutorials on a range of topics including Laravel, modern PHP, unit testing, and JavaScript. Boost your skills by digging into our comprehensive video library.
+---
 
-## Laravel Sponsors
+## 🛠️ Stack Tecnológico
 
-We would like to extend our thanks to the following sponsors for funding Laravel development. If you are interested in becoming a sponsor, please visit the [Laravel Partners program](https://partners.laravel.com).
+- **Backend:** Laravel 11 (PHP 8.2+)
+- **Frontend:** HTML5, CSS3 (Diseño Premium con variables personalizadas), JavaScript (Vanilla AJAX / Fetch API).
+- **Base de Datos:** MySQL / MariaDB.
+- **Seguridad:** Gestión de roles y permisos (Admin, Organizador, Juez, Jugador) mediante Spatie Laravel-Permission.
 
-### Premium Partners
+---
 
-- **[Vehikl](https://vehikl.com/)**
-- **[Tighten Co.](https://tighten.co)**
-- **[WebReinvent](https://webreinvent.com/)**
-- **[Kirschbaum Development Group](https://kirschbaumdevelopment.com)**
-- **[64 Robots](https://64robots.com)**
-- **[Curotec](https://www.curotec.com/services/technologies/laravel/)**
-- **[Cyber-Duck](https://cyber-duck.co.uk)**
-- **[DevSquad](https://devsquad.com/hire-laravel-developers)**
-- **[Jump24](https://jump24.co.uk)**
-- **[Redberry](https://redberry.international/laravel/)**
-- **[Active Logic](https://activelogic.com)**
-- **[byte5](https://byte5.de)**
-- **[OP.GG](https://op.gg)**
+## 🚀 Instalación y Configuración
 
-## Contributing
+1. **Clonar el repositorio:**
+   ```bash
+   git clone git@gitlab.com:antoniogalindo/ptcg-companion.git
+   ```
 
-Thank you for considering contributing to the Laravel framework! The contribution guide can be found in the [Laravel documentation](https://laravel.com/docs/contributions).
+2. **Instalar dependencias:**
+   ```bash
+   composer install
+   npm install && npm run build
+   ```
 
-## Code of Conduct
+3. **Configurar el entorno:**
+   - Copia `.env.example` a `.env`.
+   - Genera la clave de aplicación: `php artisan key:generate`.
+   - Configura tus credenciales de base de datos en el `.env`.
 
-In order to ensure that the Laravel community is welcoming to all, please review and abide by the [Code of Conduct](https://laravel.com/docs/contributions#code-of-conduct).
+4. **Migraciones y Datos Base:**
+   ```bash
+   php artisan migrate --seed
+   php artisan db:seed --class=LocationSeeder
+   ```
 
-## Security Vulnerabilities
+---
 
-If you discover a security vulnerability within Laravel, please send an e-mail to Taylor Otwell via [taylor@laravel.com](mailto:taylor@laravel.com). All security vulnerabilities will be promptly addressed.
+## 📖 Cómo funciona
 
-## License
+1. **Para Jugadores:** Completa tu perfil con tu fecha de nacimiento (para asignar tu categoría MA, SR o JR) y tu Player ID. Una vez hecho, puedes inscribirte en cualquier torneo público o mediante el código QR del organizador.
+2. **Para Organizadores:** Crea un torneo, configura el formato y las rondas. Utiliza el modal de inscripciones para confirmar o dar de baja a los jugadores. Cuando estés listo, abre las rondas y gestiona los emparejamientos.
+3. **Para Administradores:** Gestiona los roles de los usuarios, supervisa los logs de actividad y configura los parámetros globales de la aplicación.
 
-The Laravel framework is open-sourced software licensed under the [MIT license](https://opensource.org/licenses/MIT).
+---
+
+Desarrollado con ❤️ para la comunidad de Pokémon TCG.

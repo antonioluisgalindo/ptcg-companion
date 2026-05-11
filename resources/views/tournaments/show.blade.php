@@ -160,16 +160,28 @@
             </div>
         @else
             @php $statusBadge = $userRegistration->status_badge; @endphp
-            <div style="display:flex;align-items:center;gap:var(--spacing-md);">
-                <i class="bi bi-check-circle-fill" style="font-size:1.5rem;color:var(--color-success);"></i>
-                <div>
-                    <p style="font-weight:600;color:var(--color-text-primary);">Ya estás inscrito/a</p>
-                    <p style="font-size:0.8rem;color:var(--color-text-muted);margin-top:2px;">
-                        Estado: <span class="badge-custom badge-{{ match($userRegistration->status) {
-                            'confirmed' => 'success', 'pending' => 'warning', default => 'danger'
-                        } }}">{{ $statusBadge['label'] }}</span>
-                    </p>
+            <div style="display:flex;align-items:center;justify-content:space-between;gap:var(--spacing-md);flex-wrap:wrap;">
+                <div style="display:flex;align-items:center;gap:var(--spacing-md);">
+                    <i class="bi bi-check-circle-fill" style="font-size:1.5rem;color:var(--color-success);"></i>
+                    <div>
+                        <p style="font-weight:600;color:var(--color-text-primary);">Ya estás inscrito/a</p>
+                        <p style="font-size:0.8rem;color:var(--color-text-muted);margin-top:2px;">
+                            Estado: <span class="badge-custom badge-{{ match($userRegistration->status) {
+                                'confirmed' => 'success', 'pending' => 'warning', default => 'danger'
+                            } }}">{{ $statusBadge['label'] }}</span>
+                        </p>
+                    </div>
                 </div>
+                @if($tournament->status === 'registration' && $userRegistration->status !== 'dropped')
+                <form method="POST" action="{{ route('registrations.cancel', $userRegistration) }}"
+                    onsubmit="return confirm('¿Seguro que quieres cancelar tu inscripción? Esta acción no se puede deshacer fácilmente.')">
+                    @csrf
+                    @method('DELETE')
+                    <button type="submit" class="btn-ptcg btn-danger-ptcg btn-sm">
+                        <i class="bi bi-x-circle"></i> Cancelar inscripción
+                    </button>
+                </form>
+                @endif
             </div>
         @endif
     </div>
@@ -360,7 +372,76 @@
 
         <!-- Standings (if tournament has started) -->
         @if($tournament->standings->count() > 0)
-        <!-- ... existing standings ... -->
+        <div class="card-custom">
+            <div class="card-custom-header">
+                <h3 class="card-custom-title"><i class="bi bi-list-ol" style="margin-right:6px;color:var(--color-warning);"></i> Clasificación</h3>
+                <span style="font-size:0.75rem;color:var(--color-text-muted);">Ronda {{ $tournament->currentRoundNumber() }} completada</span>
+            </div>
+            <div class="table-responsive">
+                <table class="table-ptcg" style="margin:0;border:none;background:transparent;">
+                    <thead>
+                        <tr style="background:rgba(255,255,255,0.02);">
+                            <th style="width:44px;text-align:center;">#</th>
+                            <th>Jugador</th>
+                            <th style="text-align:center;">Pts</th>
+                            <th style="text-align:center;">W/L/D</th>
+                            <th style="text-align:center;">GWP%</th>
+                            <th style="text-align:center;">OWP%</th>
+                            <th style="text-align:center;">OOWP%</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        @foreach($tournament->standings->sortBy('position') as $standing)
+                        @php
+                            $isMe = $standing->user_id === $user->id;
+                            $medal = match($standing->position) {
+                                1 => ['icon' => 'bi-trophy-fill', 'color' => '#FFD700'],
+                                2 => ['icon' => 'bi-trophy-fill', 'color' => '#C0C0C0'],
+                                3 => ['icon' => 'bi-trophy-fill', 'color' => '#CD7F32'],
+                                default => null,
+                            };
+                        @endphp
+                        <tr class="row-hover" style="{{ $isMe ? 'background:rgba(227,53,13,0.07);' : '' }}">
+                            <td style="text-align:center;font-weight:700;">
+                                @if($medal)
+                                    <i class="bi {{ $medal['icon'] }}" style="color:{{ $medal['color'] }};font-size:0.85rem;"></i>
+                                @else
+                                    <span style="color:var(--color-text-muted);font-size:0.875rem;">{{ $standing->position }}</span>
+                                @endif
+                            </td>
+                            <td>
+                                <div style="display:flex;align-items:center;gap:8px;">
+                                    <img src="{{ $standing->user->avatar_url }}" style="width:28px;height:28px;border-radius:50%;border:1px solid {{ $isMe ? 'var(--color-primary)' : 'rgba(255,255,255,0.1)' }};">
+                                    <div>
+                                        <span style="font-weight:{{ $isMe ? '700' : '500' }};color:{{ $isMe ? 'var(--color-primary-light)' : 'var(--color-text-primary)' }};font-size:0.875rem;">
+                                            {{ $standing->user->full_name }}
+                                            @if($isMe) <span style="font-size:0.65rem;opacity:0.7;">(tú)</span> @endif
+                                        </span>
+                                        <span style="display:block;font-size:0.65rem;color:var(--color-text-muted);font-weight:700;">{{ $standing->user->category_sigla }}</span>
+                                    </div>
+                                </div>
+                            </td>
+                            <td style="text-align:center;font-weight:800;font-size:1rem;color:{{ $isMe ? 'var(--color-primary-light)' : 'var(--color-text-primary)' }};">
+                                {{ $standing->match_points }}
+                            </td>
+                            <td style="text-align:center;font-size:0.8rem;color:var(--color-text-secondary);">
+                                <span style="color:var(--color-success);">{{ $standing->matches_won }}</span>/<span style="color:var(--color-danger);">{{ $standing->matches_lost }}</span>/<span style="color:var(--color-text-muted);">{{ $standing->matches_drawn }}</span>
+                            </td>
+                            <td style="text-align:center;font-size:0.8rem;color:var(--color-text-secondary);">
+                                {{ number_format($standing->game_win_pct * 100, 1) }}%
+                            </td>
+                            <td style="text-align:center;font-size:0.8rem;color:var(--color-text-secondary);">
+                                {{ number_format($standing->opponent_win_pct * 100, 1) }}%
+                            </td>
+                            <td style="text-align:center;font-size:0.8rem;color:var(--color-text-muted);">
+                                {{ number_format($standing->opp_opp_win_pct * 100, 1) }}%
+                            </td>
+                        </tr>
+                        @endforeach
+                    </tbody>
+                </table>
+            </div>
+        </div>
         @endif
 
         <!-- Integration Tools (TOM) -->

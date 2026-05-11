@@ -74,7 +74,7 @@ class StandingsService
                     break;
             }
 
-            // Game details
+            // Game details — calculate games_played from individual wins+ties, don't trust the stored field
             if ($pairing->matchResult) {
                 $mr = $pairing->matchResult;
                 if ($pairing->player1_id === $userId) {
@@ -84,7 +84,8 @@ class StandingsService
                     $games_won  += $mr->player2_wins;
                     $games_lost += $mr->player1_wins;
                 }
-                $games_played += $mr->games_played;
+                // Auto-derive games_played so we never depend on the stored value being correct
+                $games_played += $mr->player1_wins + $mr->player2_wins + ($mr->ties ?? 0);
             }
         }
 

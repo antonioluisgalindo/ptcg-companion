@@ -50,6 +50,7 @@ Route::middleware('auth')->group(function () {
     Route::post('/tournaments/{tournament}/register',        [TournamentController::class, 'register'])->name('tournaments.register');
     Route::post('/registrations/{registration}/confirm',     [TournamentController::class, 'confirmRegistration'])->name('registrations.confirm');
     Route::post('/registrations/{registration}/drop',        [TournamentController::class, 'dropPlayer'])->name('registrations.drop');
+    Route::delete('/registrations/{registration}/cancel',    [TournamentController::class, 'cancelRegistration'])->name('registrations.cancel');
 
     // Rounds
     Route::get('/rounds/{round}',                       [RoundController::class, 'show'])->name('rounds.show');

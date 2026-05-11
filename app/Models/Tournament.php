@@ -34,7 +34,27 @@ class Tournament extends Model
     }
 
     protected $fillable = [
-        'starts_at', 'venue', 'city', 'province_id', 'locality_id', 'is_public', 'require_deck_list', 'match_format',
+        'name',
+        'description',
+        'format',
+        'match_format',
+        'max_players',
+        'swiss_rounds',
+        'top_cut_enabled',
+        'top_cut_size',
+        'match_time_minutes',
+        'registration_opens_at',
+        'registration_closes_at',
+        'starts_at',
+        'venue',
+        'city',
+        'province_id',
+        'locality_id',
+        'is_public',
+        'require_deck_list',
+        'organizer_id',
+        'access_code',
+        'status',
     ];
 
     protected $casts = [

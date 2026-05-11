@@ -73,6 +73,24 @@
             <div><p class="stat-label">Finalizados</p><h3 class="stat-value">{{ $stats['my_finished_tournaments'] ?? 0 }}</h3></div>
         </div>
 
+    @elseif(auth()->user()->hasRole('juez'))
+        <div class="stat-card">
+            <div class="stat-icon stat-icon-primary"><i class="bi bi-shield-check"></i></div>
+            <div><p class="stat-label">Torneos Activos</p><h3 class="stat-value">{{ $stats['active_tournaments'] ?? 0 }}</h3></div>
+        </div>
+        <div class="stat-card">
+            <div class="stat-icon stat-icon-warning"><i class="bi bi-clipboard-pulse"></i></div>
+            <div><p class="stat-label">Resultados Pendientes</p><h3 class="stat-value">{{ $stats['pending_results'] ?? 0 }}</h3></div>
+        </div>
+        <div class="stat-card">
+            <div class="stat-icon stat-icon-info"><i class="bi bi-controller"></i></div>
+            <div><p class="stat-label">Mis Partidas</p><h3 class="stat-value">{{ $stats['my_active_pairings'] ?? 0 }}</h3></div>
+        </div>
+        <div class="stat-card">
+            <div class="stat-icon stat-icon-success"><i class="bi bi-journal-bookmark"></i></div>
+            <div><p class="stat-label">Mis Inscripciones</p><h3 class="stat-value">{{ $stats['my_registrations'] ?? 0 }}</h3></div>
+        </div>
+
     @else
         <!-- Jugador -->
         <div class="stat-card">

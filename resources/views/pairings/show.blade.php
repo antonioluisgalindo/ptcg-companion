@@ -3,9 +3,11 @@
 
 @section('content')
 @php
-    $user = auth()->user();
+    $user    = auth()->user();
     $isJudge = $user->hasAnyRole(['admin','juez']);
     $tournament = $pairing->round->tournament;
+    $isBo1   = $tournament->match_format === 'bo1';
+    $maxWins = $isBo1 ? 1 : 2;
 @endphp
 
 <div style="margin-bottom:var(--spacing-lg);">
@@ -42,10 +44,18 @@
 
                 <!-- Player 2 -->
                 <div style="text-align:center;">
-                    <img src="{{ $pairing->player2->avatar_url }}" alt="" style="width:56px;height:56px;border-radius:50%;margin-bottom:var(--spacing-sm);border:2px solid var(--color-border);">
-                    <p style="font-weight:700;color:var(--color-text-primary);">{{ $pairing->player2->full_name }}</p>
-                    @if($pairing->player2->player_id)
-                        <p style="font-size:0.72rem;color:var(--color-text-muted);font-family:monospace;">{{ $pairing->player2->player_id }}</p>
+                    @if($pairing->player2)
+                        <img src="{{ $pairing->player2->avatar_url }}" alt="" style="width:56px;height:56px;border-radius:50%;margin-bottom:var(--spacing-sm);border:2px solid var(--color-border);">
+                        <p style="font-weight:700;color:var(--color-text-primary);">{{ $pairing->player2->full_name }}</p>
+                        @if($pairing->player2->player_id)
+                            <p style="font-size:0.72rem;color:var(--color-text-muted);font-family:monospace;">{{ $pairing->player2->player_id }}</p>
+                        @endif
+                    @else
+                        <div style="width:56px;height:56px;border-radius:50%;margin:0 auto var(--spacing-sm);border:2px dashed var(--color-border);background:var(--color-bg-tertiary);display:flex;align-items:center;justify-content:center;">
+                            <i class="bi bi-person-slash" style="font-size:1.25rem;color:var(--color-text-muted);"></i>
+                        </div>
+                        <p style="font-weight:700;color:var(--color-text-muted);">— BYE —</p>
+                        <p style="font-size:0.72rem;color:var(--color-text-muted);">Recibes 3 puntos</p>
                     @endif
                 </div>
             </div>
@@ -59,7 +69,7 @@
         <i class="bi bi-info-circle-fill"></i>
         <div>
             <strong>Resultado actual:</strong>
-            {{ $pairing->player1->name }} {{ $mr->player1_wins }}–{{ $mr->player2_wins }} {{ $pairing->player2->name }}
+            {{ $pairing->player1->name }} {{ $mr->player1_wins }}–{{ $mr->player2_wins }} {{ $pairing->player2?->name ?? 'BYE' }}
             @if($mr->ties > 0) (+{{ $mr->ties }} empate@if($mr->ties>1)s@endif) @endif
             <br>
             <span style="font-size:0.8rem;">Registrado por {{ $mr->reportedBy->full_name }}
@@ -69,7 +79,8 @@
     </div>
     @endif
 
-    <!-- Result Form -->
+    <!-- Result Form (only for real matches, not BYEs) -->
+    @if(!$pairing->isBye())
     <div class="card-custom">
         <div class="card-custom-header">
             <h3 class="card-custom-title">
@@ -90,17 +101,21 @@
 
                 <!-- Games Section -->
                 <p style="font-size:0.875rem;color:var(--color-text-secondary);margin-bottom:var(--spacing-lg);">
-                    Introduce los resultados por cada game (Best of 3). El resultado del match se calcula automáticamente.
+                    @if($isBo1)
+                        Formato <strong>Bo1</strong>: indica quién gana el único juego.
+                    @else
+                        Formato <strong>Bo3</strong>: introduce los juegos ganados por cada jugador (máx. 2).
+                    @endif
                 </p>
 
                 <!-- Visual game selector -->
-                <div style="display:grid;grid-template-columns:1fr auto 1fr;gap:var(--spacing-lg);margin-bottom:var(--spacing-xl);">
+                <div style="display:grid;grid-template-columns:1fr {{ $isBo1 ? '' : 'auto ' }}1fr;gap:var(--spacing-lg);margin-bottom:var(--spacing-xl);">
                     <!-- Player 1 wins -->
                     <div>
-                        <label class="form-label" style="text-align:center;display:block;">Games ganados por</label>
+                        <label class="form-label" style="text-align:center;display:block;">{{ $isBo1 ? 'Ganador' : 'Games ganados por' }}</label>
                         <p style="text-align:center;font-weight:700;color:var(--color-text-primary);margin-bottom:var(--spacing-sm);">{{ $pairing->player1->name }}</p>
                         <div style="display:flex;justify-content:center;gap:var(--spacing-sm);">
-                            @for($i=0;$i<=2;$i++)
+                            @for($i = 0; $i <= $maxWins; $i++)
                             <label style="cursor:pointer;">
                                 <input type="radio" name="player1_wins" value="{{ $i }}" {{ (old('player1_wins', $pairing->matchResult?->player1_wins ?? '') == $i) ? 'checked' : '' }} required
                                     style="display:none;" class="game-radio" onchange="updatePreview()">
@@ -113,7 +128,8 @@
                         </div>
                     </div>
 
-                    <!-- Ties -->
+                    @if(!$isBo1)
+                    <!-- Ties (Bo3 only) -->
                     <div style="text-align:center;">
                         <label class="form-label">Empates</label>
                         <select name="ties" class="form-control-ptcg" style="width:70px;text-align:center;">
@@ -121,13 +137,16 @@
                             <option value="1" {{ old('ties', $pairing->matchResult?->ties ?? 0) == 1 ? 'selected' : '' }}>1</option>
                         </select>
                     </div>
+                    @else
+                    <input type="hidden" name="ties" value="0">
+                    @endif
 
                     <!-- Player 2 wins -->
                     <div>
-                        <label class="form-label" style="text-align:center;display:block;">Games ganados por</label>
+                        <label class="form-label" style="text-align:center;display:block;">{{ $isBo1 ? 'Ganador' : 'Games ganados por' }}</label>
                         <p style="text-align:center;font-weight:700;color:var(--color-text-primary);margin-bottom:var(--spacing-sm);">{{ $pairing->player2->name }}</p>
                         <div style="display:flex;justify-content:center;gap:var(--spacing-sm);">
-                            @for($i=0;$i<=2;$i++)
+                            @for($i = 0; $i <= $maxWins; $i++)
                             <label style="cursor:pointer;">
                                 <input type="radio" name="player2_wins" value="{{ $i }}" {{ (old('player2_wins', $pairing->matchResult?->player2_wins ?? '') == $i) ? 'checked' : '' }} required
                                     style="display:none;" class="game-radio" onchange="updatePreview()">
@@ -164,6 +183,16 @@
             </form>
         </div>
     </div>
+    @else
+    {{-- BYE: resultado ya confirmado automáticamente --}}
+    <div class="card-custom">
+        <div class="card-custom-body" style="text-align:center;padding:var(--spacing-xl);">
+            <i class="bi bi-check-circle-fill" style="font-size:2.5rem;color:var(--color-success);display:block;margin-bottom:var(--spacing-md);"></i>
+            <p style="font-weight:700;color:var(--color-text-primary);font-size:1.1rem;">BYE confirmado</p>
+            <p style="color:var(--color-text-muted);font-size:0.875rem;margin-top:var(--spacing-xs);">Recibes 3 puntos automáticamente. No es necesario registrar resultado.</p>
+        </div>
+    </div>
+    @endif
 </div>
 
 <style>
@@ -199,7 +228,7 @@ function updatePreview() {
     const preview = document.getElementById('result-preview');
     const text = document.getElementById('result-text');
     const p1name = '{{ $pairing->player1->name }}';
-    const p2name = '{{ $pairing->player2->name }}';
+    const p2name = '{{ $pairing->player2?->name ?? "BYE" }}';
 
     preview.style.display = 'block';
     if (parseInt(p1) > parseInt(p2)) {

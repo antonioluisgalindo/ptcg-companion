@@ -7,6 +7,7 @@ use App\Models\Round;
 use App\Models\Pairing;
 use App\Models\Standing;
 use Illuminate\Support\Collection;
+use Illuminate\Support\Facades\DB;
 
 class SwissPairingService
 {
@@ -15,31 +16,33 @@ class SwissPairingService
      */
     public function generateRound(Tournament $tournament): Round
     {
-        $currentRoundNumber = $tournament->currentRoundNumber();
-        $nextRoundNumber    = $currentRoundNumber + 1;
+        return DB::transaction(function () use ($tournament) {
+            $currentRoundNumber = $tournament->currentRoundNumber();
+            $nextRoundNumber    = $currentRoundNumber + 1;
 
-        // Create the new round
-        $round = $tournament->rounds()->create([
-            'number'     => $nextRoundNumber,
-            'type'       => 'swiss',
-            'status'     => 'active',
-            'started_at' => now(),
-            'time_limit_at' => now()->addMinutes($tournament->match_time_minutes ?? 50),
-        ]);
+            // Create the new round
+            $round = $tournament->rounds()->create([
+                'number'        => $nextRoundNumber,
+                'type'          => 'swiss',
+                'status'        => 'active',
+                'started_at'    => now(),
+                'time_limit_at' => now()->addMinutes($tournament->match_time_minutes ?? 50),
+            ]);
 
-        $players = $this->getActivePlayers($tournament);
+            $players = $this->getActivePlayers($tournament);
 
-        if ($currentRoundNumber === 0) {
-            // Round 1: random pairings
-            $players = $players->shuffle();
-        } else {
-            // Sort by match_points desc, then OWP desc
-            $players = $this->sortPlayersByStanding($tournament, $players);
-        }
+            if ($currentRoundNumber === 0) {
+                // Round 1: random pairings
+                $players = $players->shuffle();
+            } else {
+                // Sort by match_points desc, then OWP desc
+                $players = $this->sortPlayersByStanding($tournament, $players);
+            }
 
-        $this->createPairings($round, $players, $tournament);
+            $this->createPairings($round, $players, $tournament);
 
-        return $round;
+            return $round;
+        });
     }
 
     /**

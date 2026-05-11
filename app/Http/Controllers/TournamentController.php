@@ -283,6 +283,30 @@ class TournamentController extends Controller
         return back()->with('success', 'Jugador dado de baja del torneo.');
     }
 
+    /**
+     * Allow a player to cancel their own registration (only during registration phase).
+     */
+    public function cancelRegistration(TournamentRegistration $registration)
+    {
+        // Only the registrant themselves can cancel
+        abort_if($registration->user_id !== Auth::id(), 403, 'No puedes cancelar la inscripción de otro jugador.');
+
+        // Only allowed while the tournament is in registration phase
+        abort_if(
+            !in_array($registration->tournament->status, ['draft', 'registration']),
+            422,
+            'No puedes cancelar tu inscripción una vez que el torneo ha comenzado. Contacta con el organizador.'
+        );
+
+        abort_if($registration->status === 'dropped', 422, 'Tu inscripción ya está cancelada.');
+
+        $tournamentName = $registration->tournament->name;
+        $registration->update(['status' => 'dropped', 'dropped_at' => now()]);
+
+        return redirect()->route('tournaments.show', $registration->tournament)
+            ->with('success', "Tu inscripción en \"{$tournamentName}\" ha sido cancelada.");
+    }
+
     public function joinByCode(Request $request)
     {
         $request->validate(['access_code' => ['required', 'string', 'max:10']]);

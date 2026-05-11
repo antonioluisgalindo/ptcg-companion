@@ -27,8 +27,8 @@
                 </span>
             @endif
             @if($round->time_limit_at && $round->status === 'active')
-                <span style="font-size:0.8rem;color:var(--color-warning);">
-                    <i class="bi bi-hourglass-split"></i> Tiempo límite: {{ $round->time_limit_at->format('H:i') }}
+                <span class="match-timer" data-limit="{{ $round->time_limit_at->toIso8601String() }}" style="font-size:0.85rem;color:var(--color-warning);font-weight:700;display:inline-flex;align-items:center;gap:4px;background:rgba(234,179,8,0.1);padding:4px 8px;border-radius:var(--radius-md);">
+                    <i class="bi bi-hourglass-split"></i> <span class="timer-display">Calculando...</span>
                 </span>
             @endif
             <span style="font-size:0.8rem;color:var(--color-text-muted);">
@@ -165,4 +165,34 @@
         @endforeach
     </div>
 </div>
+
+@push('scripts')
+<script>
+function updateRoundTimer() {
+    const timerElements = document.querySelectorAll('.match-timer');
+    timerElements.forEach(el => {
+        const timeLimit = el.getAttribute('data-limit');
+        if (!timeLimit) return;
+
+        const limitDate = new Date(timeLimit);
+        const now = new Date();
+        const diff = limitDate - now;
+        const display = el.querySelector('.timer-display');
+
+        if (diff <= 0) {
+            display.textContent = "¡Tiempo Agotado!";
+            el.style.color = 'var(--color-danger)';
+            el.style.background = 'rgba(239,68,68,0.1)';
+        } else {
+            const m = Math.floor((diff / 1000 / 60) % 60);
+            const s = Math.floor((diff / 1000) % 60);
+            display.textContent = m + "m " + (s < 10 ? '0' : '') + s + "s restantes";
+        }
+    });
+}
+setInterval(updateRoundTimer, 1000);
+updateRoundTimer();
+</script>
+@endpush
+
 @endsection

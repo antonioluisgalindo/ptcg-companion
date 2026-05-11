@@ -38,14 +38,28 @@ class DashboardController extends Controller
 
         } elseif ($user->hasRole('juez')) {
             $activeTournaments = Tournament::whereIn('status', ['ongoing'])->with('activeRound')->get();
+            $registrations = $user->registrations()->with('tournament')->latest()->take(5)->get();
+            $activePairings = \App\Models\Pairing::where(function ($q) use ($user) {
+                    $q->where('player1_id', $user->id)->orWhere('player2_id', $user->id);
+                })
+                ->whereHas('round', fn($q) => $q->where('status', 'active'))
+                ->with(['round.tournament', 'player1', 'player2', 'matchResult'])
+                ->get();
+            $upcomingTournaments = Tournament::where('status', 'registration')
+                ->where('is_public', true)->take(5)->get();
+
             $stats = [
                 'active_tournaments'  => $activeTournaments->count(),
                 'pending_results'     => \App\Models\Pairing::whereIn('result', ['pending'])
                     ->whereHas('round', fn($q) => $q->whereIn('status', ['active']))
                     ->count(),
+                'my_registrations'    => $user->registrations()->count(),
+                'my_active_pairings'  => $activePairings->count(),
             ];
             $activities = \Spatie\Activitylog\Models\Activity::with('causer')
                 ->latest()->take(5)->get();
+
+            return view('dashboard', compact('stats', 'activities', 'registrations', 'activePairings', 'upcomingTournaments'));
 
         } else {
             // Jugador / Espectador

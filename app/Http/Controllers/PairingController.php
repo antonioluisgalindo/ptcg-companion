@@ -20,12 +20,24 @@ class PairingController extends Controller
         abort_if(!$pairing->involvesUser($user->id) && !$user->hasAnyRole(['admin', 'juez', 'organizador']), 403);
         abort_if($pairing->result !== 'pending', 422, 'Este pairing ya tiene un resultado registrado.');
 
+        $isBo1   = $pairing->round->tournament->match_format === 'bo1';
+        $maxWins = $isBo1 ? 1 : 2;
+
         $validated = $request->validate([
-            'player1_wins' => ['required', 'integer', 'min:0', 'max:2'],
-            'player2_wins' => ['required', 'integer', 'min:0', 'max:2'],
+            'player1_wins' => ['required', 'integer', 'min:0', "max:{$maxWins}"],
+            'player2_wins' => ['required', 'integer', 'min:0', "max:{$maxWins}"],
             'ties'         => ['required', 'integer', 'min:0', 'max:1'],
             'notes'        => ['nullable', 'string', 'max:500'],
         ]);
+
+        // For Bo1, ensure the total games is exactly 1 (0+1 or 1+0)
+        if ($isBo1) {
+            abort_if(
+                $validated['player1_wins'] + $validated['player2_wins'] !== 1,
+                422,
+                'En formato Bo1 debe haber exactamente 1 juego: uno de los jugadores debe ganar 1 y el otro 0.'
+            );
+        }
 
         // Derive match result
         $matchResult = $this->deriveMatchResult($validated);
@@ -34,9 +46,10 @@ class PairingController extends Controller
         $pairing->matchResult()->updateOrCreate(
             ['pairing_id' => $pairing->id],
             array_merge($validated, [
-                'reported_by'   => $user->id,
-                'match_result'  => $matchResult,
+                'reported_by'    => $user->id,
+                'match_result'   => $matchResult,
                 'is_judge_entry' => $user->hasAnyRole(['admin', 'juez']),
+                'games_played'   => $validated['player1_wins'] + $validated['player2_wins'] + $validated['ties'],
             ])
         );
 
@@ -60,12 +73,23 @@ class PairingController extends Controller
     {
         abort_if(!Auth::user()->hasAnyRole(['admin', 'juez']), 403);
 
+        $isBo1   = $pairing->round->tournament->match_format === 'bo1';
+        $maxWins = $isBo1 ? 1 : 2;
+
         $validated = $request->validate([
-            'player1_wins' => ['required', 'integer', 'min:0', 'max:2'],
-            'player2_wins' => ['required', 'integer', 'min:0', 'max:2'],
+            'player1_wins' => ['required', 'integer', 'min:0', "max:{$maxWins}"],
+            'player2_wins' => ['required', 'integer', 'min:0', "max:{$maxWins}"],
             'ties'         => ['required', 'integer', 'min:0', 'max:1'],
             'notes'        => ['nullable', 'string', 'max:500'],
         ]);
+
+        if ($isBo1) {
+            abort_if(
+                $validated['player1_wins'] + $validated['player2_wins'] !== 1,
+                422,
+                'En formato Bo1 debe haber exactamente 1 juego: uno de los jugadores debe ganar 1 y el otro 0.'
+            );
+        }
 
         $matchResult = $this->deriveMatchResult($validated);
 
@@ -75,6 +99,7 @@ class PairingController extends Controller
                 'reported_by'    => Auth::id(),
                 'match_result'   => $matchResult,
                 'is_judge_entry' => true,
+                'games_played'   => $validated['player1_wins'] + $validated['player2_wins'] + $validated['ties'],
             ])
         );
 

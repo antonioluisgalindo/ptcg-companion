@@ -93,7 +93,9 @@
                 <img src="{{ $pairing->player1->avatar_url }}" alt="" style="width:28px;height:28px;border-radius:50%;object-fit:cover;">
                 <div>
                     <span style="font-size:0.875rem;font-weight:{{ $pairing->result === 'player1_win' ? '700' : '500' }};color:{{ $pairing->result === 'player1_win' ? 'var(--color-text-primary)' : 'var(--color-text-secondary)' }};">
-                        {{ $pairing->player1->full_name }}
+                        <a href="{{ route('users.show', $pairing->player1) }}" style="color:inherit; text-decoration:none;" class="hover-underline">
+                            {{ $pairing->player1->full_name }}
+                        </a>
                     </span>
                     @if($pairing->result === 'player1_win')
                         <i class="bi bi-trophy-fill" style="color:var(--color-warning);font-size:0.7rem;margin-left:4px;"></i>
@@ -125,7 +127,9 @@
                         <i class="bi bi-trophy-fill" style="color:var(--color-warning);font-size:0.7rem;margin-right:4px;"></i>
                     @endif
                     <span style="font-size:0.875rem;font-weight:{{ $pairing->result === 'player2_win' ? '700' : '500' }};color:{{ $pairing->result === 'player2_win' ? 'var(--color-text-primary)' : 'var(--color-text-secondary)' }};">
-                        {{ $pairing->player2->full_name }}
+                        <a href="{{ route('users.show', $pairing->player2) }}" style="color:inherit; text-decoration:none;" class="hover-underline">
+                            {{ $pairing->player2->full_name }}
+                        </a>
                     </span>
                 </div>
                 <img src="{{ $pairing->player2->avatar_url }}" alt="" style="width:28px;height:28px;border-radius:50%;object-fit:cover;">

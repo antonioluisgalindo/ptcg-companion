@@ -42,6 +42,10 @@ class PairingController extends Controller
         // Derive match result
         $matchResult = $this->deriveMatchResult($validated);
 
+        if ($pairing->round->type === 'top_cut') {
+            abort_if($matchResult === 'draw', 422, 'En las rondas de Top Cut no están permitidos los empates. Debe haber un ganador.');
+        }
+
         // Create or update MatchResult
         $pairing->matchResult()->updateOrCreate(
             ['pairing_id' => $pairing->id],
@@ -92,6 +96,10 @@ class PairingController extends Controller
         }
 
         $matchResult = $this->deriveMatchResult($validated);
+
+        if ($pairing->round->type === 'top_cut') {
+            abort_if($matchResult === 'draw', 422, 'En las rondas de Top Cut no están permitidos los empates. Debe haber un ganador.');
+        }
 
         $pairing->matchResult()->updateOrCreate(
             ['pairing_id' => $pairing->id],

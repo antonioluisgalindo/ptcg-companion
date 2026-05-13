@@ -7,12 +7,14 @@ use App\Models\Tournament;
 use App\Services\NotificationService;
 use App\Services\StandingsService;
 use App\Services\SwissPairingService;
+use App\Services\TopCutService;
 use Illuminate\Http\Request;
 
 class RoundController extends Controller
 {
     public function __construct(
         private SwissPairingService $pairingService,
+        private TopCutService       $topCutService,
         private StandingsService    $standingsService,
         private NotificationService $notificationService
     ) {}
@@ -34,7 +36,20 @@ class RoundController extends Controller
             $this->standingsService->initializeStandings($tournament);
         }
 
-        $round = $this->pairingService->generateRound($tournament);
+        $currentRoundNum = $tournament->currentRoundNumber();
+        $swissRounds = $tournament->swiss_rounds_count;
+
+        if ($currentRoundNum >= $swissRounds) {
+            abort_if(!$tournament->top_cut_enabled, 422, 'El torneo ya ha completado todas sus rondas y no tiene Top Cut.');
+            
+            $topCutRoundsCount = $tournament->rounds()->where('type', 'top_cut')->count();
+            $maxTopCutRounds = log($tournament->top_cut_size, 2);
+            abort_if($topCutRoundsCount >= $maxTopCutRounds, 422, 'El Top Cut ya ha finalizado.');
+
+            $round = $this->topCutService->generateRound($tournament);
+        } else {
+            $round = $this->pairingService->generateRound($tournament);
+        }
         $this->notificationService->notifyPairingsReady($round);
 
         return redirect()->route('rounds.show', $round)

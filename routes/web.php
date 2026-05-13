@@ -21,6 +21,12 @@ Route::post('/logout',  [LoginController::class, 'logout'])->name('logout');
 Route::get('/register', [RegisterController::class, 'showRegistrationForm'])->name('register');
 Route::post('/register',[RegisterController::class, 'register'])->name('register.post');
 
+// Claim Account (for users imported from TOM)
+Route::middleware('guest')->group(function () {
+    Route::get('/claim-account', [App\Http\Controllers\Auth\ClaimAccountController::class, 'showForm'])->name('claim.form');
+    Route::post('/claim-account', [App\Http\Controllers\Auth\ClaimAccountController::class, 'claim'])->name('claim.submit');
+});
+
 // ── Authenticated ─────────────────────────────────────────────────────────────
 Route::middleware('auth')->group(function () {
     // Locations API
@@ -32,6 +38,7 @@ Route::middleware('auth')->group(function () {
     Route::get('/', [DashboardController::class, 'index'])->name('dashboard');
 
     // Profile
+    Route::get('/users/{user}',      [ProfileController::class, 'show'])->name('users.show');
     Route::get('/profile',           [ProfileController::class, 'edit'])->name('profile.edit');
     Route::put('/profile',           [ProfileController::class, 'update'])->name('profile.update');
     Route::put('/profile/password',  [ProfileController::class, 'updatePassword'])->name('profile.password');

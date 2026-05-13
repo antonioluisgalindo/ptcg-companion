@@ -260,7 +260,9 @@
                                 <i class="bi bi-trophy-fill" style="color:var(--color-warning);font-size:0.75rem;"></i>
                             @endif
                             <span style="font-size:0.875rem;{{ $pairing->result === 'player1_win' ? 'color:var(--color-text-primary);font-weight:600;' : 'color:var(--color-text-secondary);' }}">
-                                {{ $pairing->player1->full_name }}
+                                <a href="{{ route('users.show', $pairing->player1) }}" style="color:inherit; text-decoration:none;" class="hover-underline">
+                                    {{ $pairing->player1->full_name }}
+                                </a>
                             </span>
                             <span style="font-size:0.65rem; color:var(--color-text-muted); font-weight:700;">{{ $pairing->player1->category_sigla }}</span>
                         </div>
@@ -286,9 +288,15 @@
                             @if($pairing->result === 'player2_win')
                                 <i class="bi bi-trophy-fill" style="color:var(--color-warning);font-size:0.75rem;"></i>
                             @endif
-                            <span style="font-size:0.65rem; color:var(--color-text-muted); font-weight:700;">{{ $pairing->player2->category_sigla }}</span>
+                            <span style="font-size:0.65rem; color:var(--color-text-muted); font-weight:700;">{{ $pairing->player2?->category_sigla }}</span>
                             <span style="font-size:0.875rem;{{ $pairing->result === 'player2_win' ? 'color:var(--color-text-primary);font-weight:600;' : 'color:var(--color-text-secondary);' }}">
-                                {{ $pairing->player2?->full_name ?? '— BYE —' }}
+                                @if($pairing->player2)
+                                    <a href="{{ route('users.show', $pairing->player2) }}" style="color:inherit; text-decoration:none;" class="hover-underline">
+                                        {{ $pairing->player2->full_name }}
+                                    </a>
+                                @else
+                                    — BYE —
+                                @endif
                             </span>
                         </div>
                     </div>
@@ -414,7 +422,9 @@
                                     <img src="{{ $standing->user->avatar_url }}" style="width:28px;height:28px;border-radius:50%;border:1px solid {{ $isMe ? 'var(--color-primary)' : 'rgba(255,255,255,0.1)' }};">
                                     <div>
                                         <span style="font-weight:{{ $isMe ? '700' : '500' }};color:{{ $isMe ? 'var(--color-primary-light)' : 'var(--color-text-primary)' }};font-size:0.875rem;">
-                                            {{ $standing->user->full_name }}
+                                            <a href="{{ route('users.show', $standing->user) }}" style="color:inherit; text-decoration:none;" class="hover-underline">
+                                                {{ $standing->user->full_name }}
+                                            </a>
                                             @if($isMe) <span style="font-size:0.65rem;opacity:0.7;">(tú)</span> @endif
                                         </span>
                                         <span style="display:block;font-size:0.65rem;color:var(--color-text-muted);font-weight:700;">{{ $standing->user->category_sigla }}</span>

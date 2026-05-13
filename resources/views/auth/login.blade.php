@@ -29,8 +29,12 @@
 </form>
 
 <div class="guest-divider"></div>
-<p style="text-align:center;font-size:0.875rem;color:var(--color-text-muted);">
+<p style="text-align:center;font-size:0.875rem;color:var(--color-text-muted);margin-bottom:var(--spacing-sm);">
     ¿No tienes cuenta?
     <a href="{{ route('register') }}" style="color:var(--color-primary-light);font-weight:600;">Regístrate</a>
+</p>
+<p style="text-align:center;font-size:0.875rem;color:var(--color-text-muted);">
+    ¿Fuiste importado de TOM?
+    <a href="{{ route('claim.form') }}" style="color:var(--color-warning);font-weight:600;">Reclama tu cuenta</a>
 </p>
 @endsection

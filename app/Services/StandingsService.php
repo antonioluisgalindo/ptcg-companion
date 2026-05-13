@@ -177,7 +177,7 @@ class StandingsService
 
     private function getPlayerPairings(Tournament $tournament, int $userId)
     {
-        return Pairing::whereHas('round', fn($q) => $q->where('tournament_id', $tournament->id))
+        return Pairing::whereHas('round', fn($q) => $q->where('tournament_id', $tournament->id)->where('type', 'swiss'))
             ->where(function ($q) use ($userId) {
                 $q->where('player1_id', $userId)->orWhere('player2_id', $userId);
             })

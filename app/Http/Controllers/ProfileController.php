@@ -11,6 +11,34 @@ use Illuminate\Validation\Rule;
 
 class ProfileController extends Controller
 {
+    public function show(User $user)
+    {
+        $standings = $user->standings()->with('tournament')->get();
+        
+        $stats = [
+            'total_points' => $standings->sum('match_points'),
+            'total_wins'   => $standings->sum('matches_won'),
+            'total_losses' => $standings->sum('matches_lost'),
+            'total_draws'  => $standings->sum('matches_drawn'),
+            'tournaments'  => $standings->count(),
+            'win_rate'     => 0,
+        ];
+
+        $totalMatches = $stats['total_wins'] + $stats['total_losses'] + $stats['total_draws'];
+        if ($totalMatches > 0) {
+            $stats['win_rate'] = round(($stats['total_wins'] / $totalMatches) * 100, 1);
+        }
+
+        // Get past tournament history ordered by most recent
+        $history = $standings->sortByDesc(fn($s) => $s->tournament->starts_at);
+
+        return view('profile.show', [
+            'user' => $user,
+            'stats' => $stats,
+            'history' => $history
+        ]);
+    }
+
     public function edit()
     {
         $user = Auth::user();

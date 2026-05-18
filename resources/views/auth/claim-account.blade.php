@@ -6,9 +6,9 @@
     <title>Reclamar Cuenta | PTCG Companion</title>
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&family=Outfit:wght@700;800;900&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.1/font/bootstrap-icons.css">
-    <link rel="stylesheet" href="{{ asset('css/index.css') }}">
+    <link rel="stylesheet" href="{{ asset('css/app.css') }}">
 </head>
-<body style="min-height: 100vh; display: flex; align-items: center; justify-content: center; background: var(--color-bg-primary); padding: var(--spacing-lg);">
+<body style="min-height: 100vh; display: flex; align-items: center; justify-content: center; background: var(--color-bg-main); padding: var(--spacing-lg);">
     
     <div style="width: 100%; max-width: 480px;">
         <div style="text-align: center; margin-bottom: var(--spacing-xl);">

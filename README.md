@@ -7,27 +7,32 @@
 ### 📋 Gestión de Torneos
 - **Ciclo de Vida Completo:** Control total sobre los estados del torneo (Borrador, Inscripciones, En Curso, Finalizado, Cancelado).
 - **Formatos Oficiales:** Soporte para formatos Standard, Expanded y Unlimited.
-- **Top Cut:** Configuración de eliminatorias (Top 4, 8, 16, 32) tras las rondas suizas.
+- **Formatos de Partidas:** Soporte para encuentros al Mejor de 1 (Bo1) y Mejor de 3 (Bo3).
+- **Top Cut:** Configuración de eliminatorias (Top 4, 8, 16, 32) tras las rondas suizas (sin empates permitidos en rondas de corte).
+- **Sistema de Notificaciones:** Avisos automatizados a los jugadores sobre el estado de sus inscripciones, inicio de rondas o confirmación de resultados.
 
 ### 📍 Localización Inteligente
 - **Geoposicionamiento:** Clasificación de torneos por **Provincia** y **Localidad**.
 - **Filtros Avanzados:** Buscador con selectores enlazados (la provincia filtra dinámicamente las localidades mediante AJAX).
 
 ### 👥 Gestión de Participantes (UX Premium)
-- **Modal de Inscritos Asíncrono:** Adminitración de jugadores sin recargar la página.
+- **Modal de Inscritos Asíncrono:** Administración de jugadores sin recargar la página.
 - **Estadísticas en Tiempo Real:** Conteo automático de jugadores por categorías de edad (Master, Senior, Junior).
 - **Buscador Integrado:** Filtrado instantáneo de inscritos por nombre o Player ID.
 
 ### 📱 Inscripción Ágil
-- **Códigos QR:** Los organizadores pueden mostrar un código QR dinámico para que los jugadores se unan al instante.
+- **Códigos QR y Códigos de Acceso:** Los organizadores pueden mostrar un código QR dinámico o proveer un código alfanumérico para que los jugadores se unan al instante.
 - **Validación Automática:** Comprobación obligatoria de Categoría (fecha de nacimiento) y Player ID oficial para inscripciones válidas.
+- **Control de Barajas:** Los torneos pueden configurarse para exigir el envío obligatorio de la lista del mazo (decklist) al registrarse.
+- **Autogestión de Inscripciones:** Los jugadores tienen la opción de cancelar su inscripción de forma autónoma durante la fase de registro.
 
 ### ⚙️ Integración con TOM
 - **Importación Flexible:** Permite cargar bases de datos de jugadores y emparejamientos de rondas directamente desde el software **TOM (Tournament Official Manager)** mediante copiado/pegado de tablas o archivos CSV.
 
 ### ⚔️ Sistema de Emparejamientos
-- **Swiss System:** Emparejamientos automáticos basados en el rendimiento de los jugadores.
-- **Gestión de Resultados:** Interfaz intuitiva para que los jugadores o jueces reporten los marcadores de las partidas.
+- **Swiss System y Standings:** Emparejamientos automáticos y cálculo de clasificaciones tras cada ronda basándose en el rendimiento.
+- **Gestión de Resultados:** Los propios jugadores pueden reportar los marcadores de sus partidas, contando con reglas estrictas de validación (p.ej., control exacto de resultados en formato Bo1).
+- **Intervención Arbitral:** Los usuarios con rol de Juez o Administrador tienen privilegios para editar resultados, confirmar partidas y resolver posibles conflictos.
 
 ---
 
@@ -66,11 +71,30 @@
 
 ---
 
-## 📖 Cómo funciona
+## 📖 Flujos de Trabajo por Roles
 
-1. **Para Jugadores:** Completa tu perfil con tu fecha de nacimiento (para asignar tu categoría MA, SR o JR) y tu Player ID. Una vez hecho, puedes inscribirte en cualquier torneo público o mediante el código QR del organizador.
-2. **Para Organizadores:** Crea un torneo, configura el formato y las rondas. Utiliza el modal de inscripciones para confirmar o dar de baja a los jugadores. Cuando estés listo, abre las rondas y gestiona los emparejamientos.
-3. **Para Administradores:** Gestiona los roles de los usuarios, supervisa los logs de actividad y configura los parámetros globales de la aplicación.
+### 🃏 Jugadores
+1. **Registro y Perfil:** Regístrate y completa tu perfil con tu fecha de nacimiento (necesaria para determinar la categoría Master, Senior o Junior) y tu Player ID.
+2. **Inscripción:** Busca torneos públicos en tu zona o utiliza el código de acceso (alfanumérico o QR) proporcionado por el organizador.
+3. **Decklist:** Durante la inscripción, proporciona la lista de tu mazo si el torneo lo exige.
+4. **Autogestión:** Puedes cancelar tu inscripción de manera autónoma si el torneo aún se encuentra en fase de registro.
+5. **Desarrollo del Torneo:** Una vez iniciado, consulta tus emparejamientos ronda a ronda y reporta el resultado de tus partidas directamente desde tu dispositivo.
+
+### 📝 Organizadores
+1. **Creación del Torneo:** Crea un torneo definiendo el formato, tipo de partida (Bo1/Bo3), cupo de jugadores y requisitos como la entrega obligatoria de decklist.
+2. **Gestión de Inscritos:** Utiliza el panel asíncrono para aceptar o dar de baja jugadores que solicitan inscripción. Comparte el código de acceso o el QR para agilizar el proceso en el local.
+3. **Ejecución:** Cambia el estado del torneo a "En Curso" e inicia las rondas. El sistema generará emparejamientos automáticamente.
+4. **Top Cut y Finalización:** Configura las eliminatorias según la clasificación final y, tras concluir el evento, marca el torneo como finalizado.
+
+### ⚖️ Jueces
+1. **Supervisión de Rondas:** Accede a los torneos para monitorizar el estado de las rondas activas.
+2. **Resolución de Conflictos:** Si los jugadores introducen resultados erróneos o hay disputas, utiliza la intervención arbitral para editar y forzar el resultado correcto de una partida.
+3. **Auditoría:** Verifica que las normas se cumplen en rondas específicas (ej. impidiendo empates en Top Cut) y aplica notas u observaciones a las partidas.
+
+### 🛡️ Administradores
+1. **Control Total:** Acceso sin restricciones a todos los torneos, incluso aquellos en estado de "Borrador" que no sean de su autoría.
+2. **Gestión de Usuarios:** Asignación y revocación de roles (Organizador, Juez) al resto de cuentas.
+3. **Mantenimiento:** Supervisión de logs de actividad, ajustes globales de la plataforma y mantenimiento del sistema.
 
 ---
 

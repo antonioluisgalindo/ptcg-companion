@@ -232,6 +232,7 @@ body {
 /* ── Main Content ─────────────────────────────────────────────────────── */
 .main-content {
     flex: 1;
+    min-width: 0;
     margin-left: var(--sidebar-width);
     display: flex;
     flex-direction: column;
@@ -367,6 +368,7 @@ body {
 /* ── Content Area ─────────────────────────────────────────────────────── */
 .content {
     flex: 1;
+    min-width: 0;
     padding: var(--spacing-xl);
 }
 

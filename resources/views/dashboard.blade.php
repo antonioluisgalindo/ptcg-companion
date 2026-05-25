@@ -262,7 +262,7 @@
         <h3 class="card-custom-title"><i class="bi bi-trophy" style="color:var(--color-warning);margin-right:6px;"></i> Torneos Disponibles</h3>
         <a href="{{ route('tournaments.index') }}" class="card-custom-action">Ver Todos <i class="bi bi-arrow-right"></i></a>
     </div>
-    <div class="card-custom-body p-0">
+    <div class="card-custom-body p-0 table-responsive">
         @if($upcomingTournaments->count() > 0)
             <table class="table-ptcg">
                 <thead><tr><th>Torneo</th><th>Formato</th><th>Plazas</th><th></th></tr></thead>

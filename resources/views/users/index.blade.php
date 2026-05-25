@@ -11,7 +11,7 @@
 </div>
 
 <div class="card-custom animate-fade-in-up">
-    <div class="card-custom-body p-0">
+    <div class="card-custom-body p-0 table-responsive">
         <table class="table-ptcg">
             <thead>
                 <tr>

@@ -83,7 +83,7 @@
                 <h3 class="card-custom-title"><i class="bi bi-journal-text" style="margin-right:6px; color:var(--color-info);"></i> Historial de Torneos</h3>
                 <span class="badge-custom badge-secondary">{{ auth()->user()->registrations->count() }} inscripciones</span>
             </div>
-            <div class="card-custom-body p-0">
+            <div class="card-custom-body p-0 table-responsive">
                 @php $registrations = auth()->user()->registrations()->with('tournament')->latest()->get(); @endphp
                 @if($registrations->count() > 0)
                     <table class="table-ptcg">

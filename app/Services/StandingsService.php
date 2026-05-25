@@ -54,6 +54,8 @@ class StandingsService
             if ($pairing->result === 'bye') {
                 $match_points += 3;
                 $byes_received++;
+                $matches_won++;
+                $matches_played++;
                 continue;
             }
 
@@ -162,7 +164,7 @@ class StandingsService
 
     private function assignPositions(Tournament $tournament): void
     {
-        $standings = $tournament->standings()
+        $standings = Standing::where('tournament_id', $tournament->id)
             ->orderByDesc('match_points')
             ->orderByDesc('opponent_win_pct')
             ->orderByDesc('opp_opp_win_pct')

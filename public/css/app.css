@@ -1100,13 +1100,13 @@ textarea.form-control-ptcg {
 /* Common Grid Adapters */
 .grid-2-col-responsive {
     display: grid;
-    grid-template-columns: 1fr 1fr;
+    grid-template-columns: minmax(0, 1fr) minmax(0, 1fr);
     gap: var(--spacing-lg);
 }
 
 .grid-dashboard-responsive {
     display: grid;
-    grid-template-columns: 1fr 340px;
+    grid-template-columns: minmax(0, 1fr) 340px;
     gap: var(--spacing-lg);
 }
 
@@ -1114,7 +1114,7 @@ textarea.form-control-ptcg {
     .grid-2-col-responsive,
     .grid-dashboard-responsive,
     .profile-grid {
-        grid-template-columns: 1fr !important;
+        grid-template-columns: minmax(0, 1fr) !important;
     }
 }
 

@@ -17,10 +17,10 @@
             @endif
         </p>
     </div>
-    
+
     <!-- Join by Code Box -->
     @if(!auth()->user()->hasAnyRole(['admin', 'organizador', 'juez']))
-    <div class="join-code-box">
+    <div class="join-code-box mt-2">
         <form action="{{ route('tournaments.joinByCode') }}" method="POST">
             @csrf
             <label class="join-code-label">¿Tienes un código de evento?</label>
@@ -124,7 +124,7 @@
                     <i class="bi bi-clock-history"></i> <span class="timer-display">Ronda activa</span>
                 </div>
             </div>
-            
+
             <div class="match-focus-vs">
                 <div class="match-player">
                     <img src="{{ $pairing->player1->avatar_url }}" class="match-player-avatar">
@@ -177,20 +177,20 @@
                      alt="{{ $activity->causer->name ?? 'Sistema' }}" class="activity-avatar" style="width:32px;height:32px;">
                 <div style="flex:1;">
                     <p class="activity-text" style="font-size:0.875rem;">
-                        <strong>{{ $activity->causer->name ?? 'Sistema' }}</strong> 
+                        <strong>{{ $activity->causer->name ?? 'Sistema' }}</strong>
                         <span style="color:var(--color-text-secondary);">{{ $activity->description }}</span>
                         @if($activity->subject)
-                            <span style="color:var(--color-text-muted);">en</span> 
+                            <span style="color:var(--color-text-muted);">en</span>
                             <strong style="color:var(--color-primary-light);">{{ class_basename($activity->subject_type) }}</strong>
                         @endif
                     </p>
-                    
+
                     @if($activity->event === 'updated' && isset($activity->properties['attributes']))
                         <div style="font-size:0.75rem; color:var(--color-text-muted); margin-top:2px; display:flex; gap:8px; flex-wrap:wrap;">
                             @foreach(array_keys($activity->properties['attributes']) as $key)
                                 @if(!in_array($key, ['updated_at', 'created_at']) && isset($activity->properties['old'][$key]) && $activity->properties['old'][$key] !== $activity->properties['attributes'][$key])
                                     <span class="badge-custom badge-dark" style="font-size:0.65rem; border:none; background:rgba(255,255,255,0.03);">
-                                        {{ $key }}: <span style="text-decoration:line-through; opacity:0.6;">{{ is_array($activity->properties['old'][$key]) ? '...' : $activity->properties['old'][$key] }}</span> 
+                                        {{ $key }}: <span style="text-decoration:line-through; opacity:0.6;">{{ is_array($activity->properties['old'][$key]) ? '...' : $activity->properties['old'][$key] }}</span>
                                         ➔ {{ is_array($activity->properties['attributes'][$key]) ? '...' : $activity->properties['attributes'][$key] }}
                                     </span>
                                 @endif

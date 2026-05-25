@@ -67,6 +67,7 @@ RUN echo "opcache.enable=1" >> /usr/local/etc/php/conf.d/docker-php-ext-opcache.
 
 # Create start script
 RUN echo '#!/bin/bash\n\
+rm -f /etc/apache2/mods-enabled/mpm_event.load /etc/apache2/mods-enabled/mpm_worker.load\n\
 sed -i "s/80/${PORT:-8000}/g" /etc/apache2/sites-available/000-default.conf /etc/apache2/ports.conf\n\
 php artisan config:cache\n\
 php artisan route:cache\n\

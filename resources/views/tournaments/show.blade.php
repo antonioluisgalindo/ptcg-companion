@@ -231,7 +231,7 @@
                 <!-- Pairings Table (compact) -->
                 <div class="table-responsive">
                     <!-- Header row -->
-                    <div style="display:grid;grid-template-columns:80px 1fr auto 1fr;gap:var(--spacing-sm);padding:8px var(--spacing-lg);background:var(--color-bg-tertiary);border-bottom:1px solid var(--color-border);">
+                    <div style="display:grid;grid-template-columns:80px 1fr auto 1fr;gap:var(--spacing-sm);padding:8px var(--spacing-lg);background:var(--color-bg-tertiary);border-bottom:1px solid var(--color-border);min-width:500px;">
                         <span style="font-size:0.72rem;font-weight:600;color:var(--color-text-muted);text-transform:uppercase;">Mesa</span>
                         <span style="font-size:0.72rem;font-weight:600;color:var(--color-text-muted);text-transform:uppercase;">Jugador 1</span>
                         <span></span>
@@ -242,7 +242,7 @@
                         $isMyPairing = $pairing->involvesUser($user->id);
                         $resultForMe = $isMyPairing ? $pairing->getResultForPlayer($user->id) : null;
                     @endphp
-                    <div style="display:grid;grid-template-columns:80px 1fr auto 1fr;gap:var(--spacing-sm);padding:10px var(--spacing-lg);border-bottom:1px solid var(--color-border);{{ $isMyPairing ? 'background:rgba(227,53,13,0.06);' : '' }}align-items:center;">
+                    <div style="display:grid;grid-template-columns:80px 1fr auto 1fr;gap:var(--spacing-sm);padding:10px var(--spacing-lg);border-bottom:1px solid var(--color-border);{{ $isMyPairing ? 'background:rgba(227,53,13,0.06);' : '' }}align-items:center;min-width:500px;">
                         <!-- Mesa First -->
                         <div>
                             @if($pairing->table_number)

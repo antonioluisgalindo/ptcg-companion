@@ -20,7 +20,7 @@
 
     <!-- Join by Code Box -->
     @if(!auth()->user()->hasAnyRole(['admin', 'organizador', 'juez']))
-    <div class="join-code-box mt-2">
+    <div class="join-code-box" style="margin-top: var(--spacing-lg);">
         <form action="{{ route('tournaments.joinByCode') }}" method="POST">
             @csrf
             <label class="join-code-label">¿Tienes un código de evento?</label>

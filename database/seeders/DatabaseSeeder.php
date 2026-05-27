@@ -136,6 +136,11 @@ class DatabaseSeeder extends Seeder
         Setting::set('app_name', 'PTCG Companion');
         Setting::set('app_color', '#E3350D');
 
+        // ── Locations (Provinces & Localities) ────────────────────────────────
+        $this->call([
+            LocationSeeder::class,
+        ]);
+
         $this->command->info('✅ Database seeded successfully!');
         $this->command->info('   Admin: admin@ptcg.local / admin123');
         $this->command->info('   TO:    to@ptcg.local / password');

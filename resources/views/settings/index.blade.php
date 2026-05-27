@@ -34,7 +34,7 @@
             <p style="margin-bottom: var(--spacing-md); color: var(--color-text-secondary);">
                 Esta acción eliminará <strong>todos los datos actuales</strong> de la base de datos (torneos, jugadores, emparejamientos, etc.) y volverá a cargar los datos de prueba iniciales (seeders). <strong>Esta acción no se puede deshacer.</strong>
             </p>
-            <form method="POST" action="{{ route('settings.resetDatabase') }}" onsubmit="return confirm('¿Estás COMPLETAMENTE SEGURO de que deseas borrar toda la base de datos y reiniciar? Perderás todos los datos registrados en el sistema de manera irrecuperable.');">
+            <form id="form-reset-db" method="POST" action="{{ route('settings.resetDatabase') }}">
                 @csrf
                 <button type="submit" class="btn-ptcg" style="background-color: var(--color-danger); color: white; border: none;">
                     <i class="bi bi-exclamation-triangle-fill"></i> Limpiar base de datos y ejecutar Seeders
@@ -44,3 +44,50 @@
     </div>
 </div>
 @endsection
+
+@push('scripts')
+<script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+<script>
+document.getElementById('form-reset-db').addEventListener('submit', function(e) {
+    e.preventDefault();
+    
+    Swal.fire({
+        title: '¿Estás COMPLETAMENTE SEGURO?',
+        text: "Esta acción borrará TODOS los datos (torneos, jugadores, emparejamientos, etc.) y no se puede deshacer.",
+        icon: 'warning',
+        showCancelButton: true,
+        confirmButtonColor: '#dc3545', // Danger color
+        cancelButtonColor: '#6c757d',
+        confirmButtonText: 'Sí, estoy seguro',
+        cancelButtonText: 'Cancelar'
+    }).then((result) => {
+        if (result.isConfirmed) {
+            Swal.fire({
+                title: 'Último aviso: Peligro Crítico',
+                text: "Por favor, confirma de nuevo. Vas a destruir toda la base de datos de manera irreversible. ¿Deseas ejecutar el reinicio completo?",
+                icon: 'error',
+                showCancelButton: true,
+                confirmButtonColor: '#dc3545',
+                cancelButtonColor: '#6c757d',
+                confirmButtonText: '¡Sí, BORRAR TODO!',
+                cancelButtonText: 'Cancelar'
+            }).then((secondResult) => {
+                if (secondResult.isConfirmed) {
+                    // Muestra un mensaje de carga para que el usuario sepa que está procesando
+                    Swal.fire({
+                        title: 'Borrando...',
+                        text: 'Restaurando base de datos y ejecutando seeders. Por favor espera.',
+                        allowOutsideClick: false,
+                        didOpen: () => {
+                            Swal.showLoading();
+                        }
+                    });
+                    
+                    document.getElementById('form-reset-db').submit();
+                }
+            });
+        }
+    });
+});
+</script>
+@endpush

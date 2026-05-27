@@ -184,7 +184,12 @@ class IntegrationController extends Controller
             $player2 = $p2_id ? User::where('player_id', $p2_id)->first() : null;
 
             if (!$player1) {
-                $errors[] = "No se encontró jugador con ID {$p1_id} en mesa {$table}";
+                $errors[] = "No se encontró jugador 1 con ID {$p1_id} en mesa {$table}";
+                continue;
+            }
+
+            if ($p2_id && !$player2) {
+                $errors[] = "No se encontró jugador 2 con ID {$p2_id} en mesa {$table}";
                 continue;
             }
 

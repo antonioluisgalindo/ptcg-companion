@@ -27,4 +27,22 @@ class SettingController extends Controller
 
         return back()->with('success', 'Configuración actualizada correctamente.');
     }
+
+    public function resetDatabase()
+    {
+        $this->authorize('update', Setting::class);
+        
+        \Illuminate\Support\Facades\Artisan::call('migrate:fresh', [
+            '--seed' => true,
+            '--force' => true,
+        ]);
+
+        // Since the database was reset, the current user session is no longer valid
+        // We should log them out and redirect to login
+        \Illuminate\Support\Facades\Auth::logout();
+        request()->session()->invalidate();
+        request()->session()->regenerateToken();
+
+        return redirect()->route('login')->with('success', 'Base de datos limpiada y resembrada con éxito. Por favor, inicia sesión de nuevo.');
+    }
 }

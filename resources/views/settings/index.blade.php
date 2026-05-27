@@ -26,5 +26,21 @@
             </form>
         </div>
     </div>
+    <div class="card-custom mt-4" style="border-top: 3px solid var(--color-danger);">
+        <div class="card-custom-header">
+            <h3 class="card-custom-title" style="color: var(--color-danger);">Zona de Peligro</h3>
+        </div>
+        <div class="card-custom-body">
+            <p style="margin-bottom: var(--spacing-md); color: var(--color-text-secondary);">
+                Esta acción eliminará <strong>todos los datos actuales</strong> de la base de datos (torneos, jugadores, emparejamientos, etc.) y volverá a cargar los datos de prueba iniciales (seeders). <strong>Esta acción no se puede deshacer.</strong>
+            </p>
+            <form method="POST" action="{{ route('settings.resetDatabase') }}" onsubmit="return confirm('¿Estás COMPLETAMENTE SEGURO de que deseas borrar toda la base de datos y reiniciar? Perderás todos los datos registrados en el sistema de manera irrecuperable.');">
+                @csrf
+                <button type="submit" class="btn-ptcg" style="background-color: var(--color-danger); color: white; border: none;">
+                    <i class="bi bi-exclamation-triangle-fill"></i> Limpiar base de datos y ejecutar Seeders
+                </button>
+            </form>
+        </div>
+    </div>
 </div>
 @endsection

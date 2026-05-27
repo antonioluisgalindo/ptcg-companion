@@ -92,6 +92,7 @@ Route::middleware('auth')->group(function () {
         // Settings
         Route::get('/settings',   [SettingController::class, 'index'])->name('settings.index');
         Route::post('/settings',  [SettingController::class, 'update'])->name('settings.update');
+        Route::post('/settings/reset-database', [SettingController::class, 'resetDatabase'])->name('settings.resetDatabase');
 
         // Activity Logs
         Route::get('/activity-logs', [ActivityLogController::class, 'index'])->name('activity-logs.index');
